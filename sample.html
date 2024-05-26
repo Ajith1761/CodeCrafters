@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Q&A Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #9c906e;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #95cfa0;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-bottom: 100px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .question {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .question h3 {
+            margin: 0;
+            color: #007bff;
+        }
+        .question p {
+            margin: 5px 0;
+        }
+        #goToQuestionsButton {
+            display: block;
+            margin: 20px auto;
+            background-color: #007bff;
+        }
+        #goToQuestionsButton:hover {
+            background-color: #0056b3;
+        }
+        .goToAnswersButton {
+            display: block;
+            margin: 10px 0;
+            background-color: #6c757d;
+        }
+        .goToAnswersButton:hover {
+            background-color: #5a6268;
+        }
+        #questionsSection {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>University Q&A Platform</h1>
+        
+        <h2>Ask a Question</h2>
+        <form id="askQuestionForm">
+            <input type="text" id="questionTitle" placeholder="Question Title" required>
+            <textarea id="questionBody" placeholder="Describe your question in detail" rows="5" required></textarea>
+            <button type="submit">Submit Question</button>
+        </form>
+
+        <button id="goToQuestionsButton">Go to Questions</button>
+
+        <div id="questionsSection">
+            <h2>Questions</h2>
+            <div id="questionsContainer">
+                <!-- Questions will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('askQuestionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const title = document.getElementById('questionTitle').value;
+            const body = document.getElementById('questionBody').value;
+
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+            questionElement.innerHTML = `
+                <h3>${title}</h3>
+                <p>${body}</p>
+                <form class="answerForm">
+                    <textarea placeholder="Type your answer here" rows="2" required></textarea>
+                    <button type="submit">Submit Answer</button>
+                </form>
+                <button class="goToAnswersButton">Go to Answers</button>
+                <div class="answers" style="display: none;">
+                    <!-- Answers will be dynamically added here -->
+                </div>
+            `;
+
+            document.getElementById('questionsContainer').appendChild(questionElement);
+
+            document.getElementById('questionTitle').value = '';
+            document.getElementById('questionBody').value = '';
+        });
+
+        document.getElementById('goToQuestionsButton').addEventListener('click', function() {
+            const questionsSection = document.getElementById('questionsSection');
+            if (questionsSection.style.display === 'none' || questionsSection.style.display === '') {
+                questionsSection.style.display = 'block';
+                questionsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('goToAnswersButton')) {
+                const answersContainer = event.target.nextElementSibling;
+                if (answersContainer.style.display === 'none' || answersContainer.style.display === '') {
+                    answersContainer.style.display = 'block';
+                    answersContainer.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        document.addEventListener('submit', function(event) {
+            if (event.target.classList.contains('answerForm')) {
+                event.preventDefault();
+                const answerText = event.target.querySelector('textarea').value;
+                const answersContainer = event.target.nextElementSibling.nextElementSibling;
+
+                const answerElement = document.createElement('p');
+                answerElement.textContent = answerText;
+                answersContainer.appendChild(answerElement);
+
+                event.target.querySelector('textarea').value = '';
+            }
+        });
+    </script>
+</body>
+</html>
